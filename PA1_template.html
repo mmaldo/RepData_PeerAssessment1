@@ -282,8 +282,7 @@ data[, &quot;date&quot;] &lt;- as.Date(data$date)
 
 <h2>Imputing missing values</h2>
 
-<p>Add an extra column where date column is converted to a factor and then a numeric. I did this to make imputing with mice package
-work with date as a variable.  Results seem reasonable. However, more diagnostics should probably be done.</p>
+<p>Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. However, more diagnostics should probably be done. Extra iterations should also probably be done to decrese the noise.  Only 5 iterations were run.</p>
 
 <pre><code class="r">timeData = data.frame(data, time = as.numeric(factor(data$date)))
 miceData = data.frame(steps = timeData$steps, date = timeData$time, interval = timeData$interval)
@@ -347,7 +346,7 @@ recombinedData = data.frame(steps = imputedData$steps, date = data$date, interva
 <pre><code class="r">class = nclass.Sturges(imputedTotalStepsPerDay$Total)
 </code></pre>
 
-<h2>Calculate binWidth</h2>
+<h2>Calculate bin width</h2>
 
 <pre><code class="r">bin = range(imputedTotalStepsPerDay$Total)/class
 </code></pre>
@@ -362,7 +361,7 @@ recombinedData = data.frame(steps = imputedData$steps, date = data$date, interva
 
 <h2>What is mean total number of steps taken per day?</h2>
 
-<h2>mean</h2>
+<h2>Mean</h2>
 
 <pre><code class="r">mean(imputedTotalStepsPerDay$Total)
 </code></pre>
@@ -370,7 +369,7 @@ recombinedData = data.frame(steps = imputedData$steps, date = data$date, interva
 <pre><code>## [1] 10783
 </code></pre>
 
-<h2>median</h2>
+<h2>Median</h2>
 
 <pre><code class="r">median(imputedTotalStepsPerDay$Total)
 </code></pre>

@@ -109,8 +109,7 @@ ggplot(averageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line(ae
 
 
 ## Imputing missing values
-Add an extra column where date column is converted to a factor and then a numeric. I did this to make imputing with mice package
-work with date as a variable.  Results seem reasonable. However, more diagnostics should probably be done.
+Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. However, more diagnostics should probably be done. Extra iterations should also probably be done to decrese the noise.  Only 5 iterations were run.
 
 ```r
 timeData = data.frame(data, time = as.numeric(factor(data$date)))
@@ -189,7 +188,7 @@ imputedTotalStepsPerDay <- ddply(recombinedData, .(date), summarize, Total = sum
 class = nclass.Sturges(imputedTotalStepsPerDay$Total)
 ```
 
-## Calculate binWidth
+## Calculate bin width
 
 ```r
 bin = range(imputedTotalStepsPerDay$Total)/class
@@ -206,7 +205,7 @@ ggplot(imputedTotalStepsPerDay, aes(x = Total)) + geom_histogram(aes(fill = ..co
 
 
 ## What is mean total number of steps taken per day?
-## mean
+## Mean
 
 ```r
 mean(imputedTotalStepsPerDay$Total)
@@ -216,7 +215,7 @@ mean(imputedTotalStepsPerDay$Total)
 ## [1] 10783
 ```
 
-## median
+## Median
 
 ```r
 median(imputedTotalStepsPerDay$Total)
