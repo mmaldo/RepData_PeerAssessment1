@@ -241,7 +241,7 @@ newaverageStepsPerinterval <- ddply(recombinedData, .(interval, week), summarize
 
 
 ```r
-ggplot(averageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line(aes(colour = meanSteps), 
+ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line(aes(colour = meanSteps), 
     size = 1) + scale_colour_gradient(high = "#56B4E9", low = "#D55E00")
 ```
 
@@ -251,14 +251,14 @@ ggplot(averageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line(ae
 ```r
 weekday = ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) + 
     geom_line(aes(colour = meanSteps), size = 1, subset = .(week == "Weekday")) + 
-    scale_colour_gradient(high = "#56B4E9", low = "#D55E00")
+    scale_colour_gradient(high = "#56B4E9", low = "#D55E00") + ggtitle("Weekday")
 ```
 
 
 ```r
 weekend = ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) + 
     geom_line(aes(colour = meanSteps), size = 1, subset = .(week == "Weekend")) + 
-    scale_colour_gradient(high = "#56B4E9", low = "#D55E00")
+    scale_colour_gradient(high = "#56B4E9", low = "#D55E00") + ggtitle("Weekend")
 ```
 
 
