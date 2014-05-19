@@ -38,16 +38,11 @@ sum(is.na(data))
 ## What is mean total number of steps taken per day?
 ### Create Histogram
 
-Total steps per day was calculated using ddply.
+#### Total steps per day was calculated using ddply.
 
 ```r
 totalStepsPerDay <- ddply(data, .(date), summarize, Total = sum(steps, na.rm = TRUE))
 ```
-
-<!--#### Determine Number of Bins --> 
-
-
-<!-- #### Calculate bin width --> 
 
 
 #### Plot Histogram 
@@ -57,7 +52,7 @@ ggplot(totalStepsPerDay, aes(x = date)) + geom_histogram(aes(fill = ..count..,
     weight = Total), binwidth = 1)
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
 
 #### Mean
@@ -109,7 +104,7 @@ ggplot(averageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line(ae
     size = 1) + scale_colour_gradient(high = "#56B4E9", low = "#D55E00")
 ```
 
-![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
 
 
 ## Imputing missing values
@@ -413,6 +408,11 @@ imp
 
 Data with with missing values is in blue. Red is imputed data.
 
+```r
+stripplot(imp, steps, pch = 20, cex = 1.2)
+```
+
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14.png) 
 
 
 
@@ -420,8 +420,15 @@ Data with with missing values is in blue. Red is imputed data.
 xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
 ```
 
-![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
+![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
 
+Checking convergence of the mice algorithm can be done with the following plots. Since there is very little trend in any of the plots we assume convergence.
+
+```r
+plot(imp, c("steps"), layout = c(2, 1))
+```
+
+![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
 
 
 ```r
@@ -430,6 +437,9 @@ recombinedData = data.frame(steps = imputedData$steps, date = data$date, interva
 ```
 
 ## What is mean total number of steps taken per day?
+The imputed data changes both are mean and meadian. It actually increases this them.  This is probably due to our data not being dominated as much by zero values.  We can notice a difference in the histogram and the time series plot.
+
+#### Use ddply to calculate total steps per day.
 
 ```r
 imputedTotalStepsPerDay <- ddply(recombinedData, .(date), summarize, Total = sum(steps))
@@ -437,12 +447,6 @@ imputedTotalStepsPerDay <- ddply(recombinedData, .(date), summarize, Total = sum
 
 
 ### Create Histogram
-<!-- #### Determine Number of Bins -->
-
-
-<!-- #### Calculate Bin Width -->
-
-
 #### Plot Histogram 
 
 ```r
@@ -450,7 +454,7 @@ ggplot(imputedTotalStepsPerDay, aes(x = date)) + geom_histogram(aes(fill = ..cou
     weight = Total), binwidth = 1)
 ```
 
-![plot of chunk unnamed-chunk-22](figure/unnamed-chunk-22.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-19.png) 
 
 
 #### Mean
@@ -497,7 +501,7 @@ ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line
     size = 1) + scale_colour_gradient(high = "#56B4E9", low = "#D55E00")
 ```
 
-![plot of chunk unnamed-chunk-27](figure/unnamed-chunk-27.png) 
+![plot of chunk unnamed-chunk-24](figure/unnamed-chunk-24.png) 
 
 #### Comparing Weekend and Weeday Patterns with Imputed Data
 
@@ -519,5 +523,5 @@ weekend = ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) +
 grid.arrange(weekday, weekend, ncol = 1)
 ```
 
-![plot of chunk unnamed-chunk-30](figure/unnamed-chunk-30.png) 
+![plot of chunk unnamed-chunk-27](figure/unnamed-chunk-27.png) 
 

@@ -20,18 +20,11 @@ sum(is.na(data))
 ## What is mean total number of steps taken per day?
 ### Create Histogram
 
-Total steps per day was calculated using ddply.
+#### Total steps per day was calculated using ddply.
 ```{r}
 totalStepsPerDay<-ddply(data,.(date),summarize,Total=sum(steps,na.rm=TRUE))
 ```
-<!--#### Determine Number of Bins --> 
-```{r eval=FALSE,echo=FALSE}
-bin = nclass.Sturges(totalStepsPerDay$date)
-```
-<!-- #### Calculate bin width --> 
-```{r eval=FALSE,echo=FALSE}
-bin=nrow(totalStepsPerDay)/class
-```
+
 #### Plot Histogram 
 ```{r fig.width=20}
 ggplot(totalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = 1)
@@ -78,33 +71,31 @@ Here is a summary of the imputation.
 imp
 ```
 
-Data with with missing values is in blue. Red is imputed data.
-```{r eval =FALSE,echo=FALSE}
-stripplot(imp, pch = 20, cex = 1.2)
+Data with with missing values is in blue. Red is imputed data. Plots of the other variables are just blue clusters since there is no missing data in any of them.
+```{r fig.width=20,fig.height=10}
+stripplot(imp, steps,pch = 20, cex = 1.2)
 ```
 
 ```{r fig.width=20}
 xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
 ```
-
+Checking convergence of the mice algorithm can be done with the following plots of our imputed data. Since there is very little trend in any of the plots we assume convergence.
+```{r fig.width=20,fig.height=8}
+plot(imp, c("steps"), layout=c(2,1))
+```
 ```{r}
 imputedData=complete(imp)
 recombinedData = data.frame(steps=imputedData$steps,date=data$date,interval=imputedData$interval)
 ```
 ## What is mean total number of steps taken per day?
+The imputed data changes both are mean and meadian. It actually increases this them.  This is probably due to our data not being dominated as much by zero values.  We can notice a difference in the histogram and the time series plot.
+
+#### Use ddply to calculate total steps per day.
 ```{r}
 imputedTotalStepsPerDay<-ddply(recombinedData,.(date),summarize,Total=sum(steps))
 ```
 
 ### Create Histogram
-<!-- #### Determine Number of Bins -->
-```{r eval =FALSE,echo=FALSE}
-bin = nclass.Sturges(imputedTotalStepsPerDay$date)
-```
-<!-- #### Calculate Bin Width -->
-```{r eval=FALSE, echo=FALSE}
-bin=range(nrow(imputedTotalStepsPerDay)/class
-```
 #### Plot Histogram 
 ```{r fig.width=20}
 ggplot(imputedTotalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = 1)
@@ -140,6 +131,6 @@ weekday=ggplot(newaverageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_li
 ```{r}
 weekend=ggplot(newaverageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1,subset=.(week == 'Weekend'))+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ ggtitle("Weekend")
 ```
-```{r fig.width=20}
+```{r fig.width=20,fig.height=10}
 grid.arrange(weekday,weekend, ncol=1)
 ```
