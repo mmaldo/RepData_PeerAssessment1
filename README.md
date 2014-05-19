@@ -1,3 +1,7 @@
+Two ways to view:
+http://matthewlmaldonado.com/PA1_template.html
+https://rawgit.com/mmaldo/RepData_PeerAssessment1/master/PA1_template.html
+
 ## Introduction
 
 It is now possible to collect a large amount of data about personal
