@@ -92,7 +92,7 @@ Checking convergence of the mice algorithm can be done with the following plots 
 ```{r fig.width=20,fig.height=8}
 plot(imp, c("steps"), layout=c(2,1))
 ```
-Here we just extract our imputed data frame and add back in our time column.
+Here we just extract our imputed data frame and add back in our original date column.
 ```{r}
 imputedData=complete(imp)
 recombinedData = data.frame(steps=imputedData$steps,date=data$date,interval=imputedData$interval)

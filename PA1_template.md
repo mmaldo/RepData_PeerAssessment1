@@ -453,7 +453,7 @@ plot(imp, c("steps"), layout = c(2, 1))
 
 ![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
 
-Here we just extract our imputed data frame and add back in our time column.
+Here we just extract our imputed data frame and add back in our original date column.
 
 ```r
 imputedData = complete(imp)
