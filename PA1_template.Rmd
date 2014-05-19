@@ -26,15 +26,15 @@ totalStepsPerDay<-ddply(data,.(date),summarize,Total=sum(steps,na.rm=TRUE))
 ```
 #### Determine Number of Bins
 ```{r}
-class = nclass.Sturges(totalStepsPerDay$Total)
+bin = nclass.Sturges(totalStepsPerDay$date)
 ```
 #### Calculate bin width
-```{r}
-bin=range(totalStepsPerDay$Total)/class
+```{r eval=FALSE}
+bin=nrow(totalStepsPerDay)/class
 ```
 #### Plot Histogram 
 ```{r}
-ggplot(totalStepsPerDay,aes(x=Total))+geom_histogram(aes(fill = ..count..),binwidth = bin[2])
+ggplot(totalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = bin[1])
 ```
 
 #### Mean
@@ -63,16 +63,18 @@ ggplot(averageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colo
 ```
 
 ## Imputing missing values
-Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. However, more diagnostics should probably be done. Extra iterations should also probably be done to decrese the noise. Only 5 iterations were run.
+Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. However, more diagnostics should probably be done. Extra iterations should also probably be done to decrese the noise. Convergence should also be checked. It was difficult finding a suitable technique for zero inflated count data. 50 interations were run with 5 imputations.
+
 ```{r}
 timeData = data.frame(data,time=as.numeric(factor(data$date)))
 miceData = data.frame(steps=timeData$steps,date=timeData$time,interval=timeData$interval)
 ```
 
 ```{r cache=TRUE}
-imp <- imp <- mice(miceData, m = 5, seed = 23109)
+imp <- imp <- mice(miceData, m = 50, seed = 23109)
 ```
-```{r}
+Data with with missing values is in blue. Red is imputed data.
+```{r eval =FALSE}
 stripplot(imp, pch = 20, cex = 1.2)
 ```
 
@@ -92,15 +94,15 @@ imputedTotalStepsPerDay<-ddply(recombinedData,.(date),summarize,Total=sum(steps)
 ### Create Histogram
 #### Determine Number of Bins
 ```{r}
-class = nclass.Sturges(imputedTotalStepsPerDay$Total)
+bin = nclass.Sturges(imputedTotalStepsPerDay$date)
 ```
 #### Calculate Bin Width
-```{r}
-bin=range(imputedTotalStepsPerDay$Total)/class
+```{r eval=FALSE}
+bin=range(nrow(imputedTotalStepsPerDay)/class
 ```
 #### Plot Histogram 
 ```{r}
-ggplot(imputedTotalStepsPerDay,aes(x=Total))+geom_histogram(aes(fill = ..count..),binwidth = bin[2])
+ggplot(imputedTotalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = bin[1])
 ```
 
 #### Mean
