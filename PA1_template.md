@@ -44,23 +44,17 @@ Total steps per day was calculated using ddply.
 totalStepsPerDay <- ddply(data, .(date), summarize, Total = sum(steps, na.rm = TRUE))
 ```
 
-#### Determine Number of Bins
+<!--#### Determine Number of Bins --> 
 
-```r
-bin = nclass.Sturges(totalStepsPerDay$date)
-```
 
-#### Calculate bin width
+<!-- #### Calculate bin width --> 
 
-```r
-bin = nrow(totalStepsPerDay)/class
-```
 
 #### Plot Histogram 
 
 ```r
 ggplot(totalStepsPerDay, aes(x = date)) + geom_histogram(aes(fill = ..count.., 
-    weight = Total), binwidth = bin[1])
+    weight = Total), binwidth = 1)
 ```
 
 ![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
@@ -417,23 +411,17 @@ imputedTotalStepsPerDay <- ddply(recombinedData, .(date), summarize, Total = sum
 
 
 ### Create Histogram
-#### Determine Number of Bins
+<!-- #### Determine Number of Bins -->
 
-```r
-bin = nclass.Sturges(imputedTotalStepsPerDay$date)
-```
 
-#### Calculate Bin Width
+<!-- #### Calculate Bin Width -->
 
-```r
-bin=range(nrow(imputedTotalStepsPerDay)/class
-```
 
 #### Plot Histogram 
 
 ```r
 ggplot(imputedTotalStepsPerDay, aes(x = date)) + geom_histogram(aes(fill = ..count.., 
-    weight = Total), binwidth = bin[1])
+    weight = Total), binwidth = 1)
 ```
 
 ![plot of chunk unnamed-chunk-21](figure/unnamed-chunk-21.png) 

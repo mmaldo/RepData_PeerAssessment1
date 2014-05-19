@@ -24,17 +24,17 @@ Total steps per day was calculated using ddply.
 ```{r}
 totalStepsPerDay<-ddply(data,.(date),summarize,Total=sum(steps,na.rm=TRUE))
 ```
-#### Determine Number of Bins
-```{r}
+<!--#### Determine Number of Bins --> 
+```{r eval=FALSE,echo=FALSE}
 bin = nclass.Sturges(totalStepsPerDay$date)
 ```
-#### Calculate bin width
-```{r eval=FALSE}
+<!-- #### Calculate bin width --> 
+```{r eval=FALSE,echo=FALSE}
 bin=nrow(totalStepsPerDay)/class
 ```
 #### Plot Histogram 
 ```{r}
-ggplot(totalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = bin[1])
+ggplot(totalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = 1)
 ```
 
 #### Mean
@@ -92,17 +92,17 @@ imputedTotalStepsPerDay<-ddply(recombinedData,.(date),summarize,Total=sum(steps)
 ```
 
 ### Create Histogram
-#### Determine Number of Bins
-```{r}
+<!-- #### Determine Number of Bins -->
+```{r eval =FALSE,echo=FALSE}
 bin = nclass.Sturges(imputedTotalStepsPerDay$date)
 ```
-#### Calculate Bin Width
-```{r eval=FALSE}
+<!-- #### Calculate Bin Width -->
+```{r eval=FALSE, echo=FALSE}
 bin=range(nrow(imputedTotalStepsPerDay)/class
 ```
 #### Plot Histogram 
 ```{r}
-ggplot(imputedTotalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = bin[1])
+ggplot(imputedTotalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = 1)
 ```
 
 #### Mean
@@ -114,6 +114,8 @@ mean(imputedTotalStepsPerDay$Total)
 median(imputedTotalStepsPerDay$Total)
 ```
 ## Are there differences in activity patterns between weekdays and weekends?
+
+A Weekend and Weekday factor was added to the new data frame.
 ```{r}
 recombinedData<-transform(recombinedData ,week = ifelse(weekdays(data$date) %in% c('Sunday','Saturday') ,"Weekend","Weekday" ))
 ```
