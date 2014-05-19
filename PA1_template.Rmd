@@ -58,7 +58,7 @@ averageStepsPerinterval<-ddply(data,.(interval),summarize,meanSteps=mean(steps,n
 averageStepsPerinterval[which.max(averageStepsPerinterval$meanSteps),]
 ```
 #### Plot Mean Steps vs Interval
-```{r}
+```{r fig.width=20}
 ggplot(averageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1)+scale_colour_gradient(high="#56B4E9",low="#D55E00")
 ```
 
@@ -83,7 +83,7 @@ Data with with missing values is in blue. Red is imputed data.
 stripplot(imp, pch = 20, cex = 1.2)
 ```
 
-```{r}
+```{r fig.width=20}
 xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
 ```
 
@@ -130,7 +130,7 @@ recombinedData<-transform(recombinedData ,week = ifelse(weekdays(data$date) %in%
 newaverageStepsPerinterval<-ddply(recombinedData,.(interval,week),summarize,meanSteps=mean(steps))
 ```
 
-```{r}
+```{r fig.width=20}
 ggplot(newaverageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1)+scale_colour_gradient(high="#56B4E9",low="#D55E00")
 ```
 #### Comparing Weekend and Weeday Patterns with Imputed Data
@@ -140,6 +140,6 @@ weekday=ggplot(newaverageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_li
 ```{r}
 weekend=ggplot(newaverageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1,subset=.(week == 'Weekend'))+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ ggtitle("Weekend")
 ```
-```{r}
+```{r fig.width=20}
 grid.arrange(weekday,weekend, ncol=1)
 ```
