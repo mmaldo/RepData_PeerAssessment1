@@ -406,7 +406,10 @@ imp
 ```
 
 
-Data with with missing values is in blue. Red is imputed data.
+Data with with missing values is in blue. Red is imputed data. 
+
+We can see how our imputed data clusters with our observed data with each iteration. So far it looks fairly decent.
+
 
 ```r
 stripplot(imp, steps, pch = 20, cex = 1.2)
@@ -414,21 +417,30 @@ stripplot(imp, steps, pch = 20, cex = 1.2)
 
 ![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14.png) 
 
+The other plots of the other variables are strictly blue since we did not impute any data into them.  Here is a plot of them for comparison.
+
+```r
+stripplot(imp, interval + date ~ .imp, pch = 20, cex = 1.2)
+```
+
+![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
+
+Next is a plot of the of steps vs interval with each iteration of the imputaion. We can see our imputed data evelve throughout the algorithm and observe that the distribution doesn't strat too far from the observed data.
 
 
 ```r
 xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
 ```
 
-![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
+![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
 
-Checking convergence of the mice algorithm can be done with the following plots. Since there is very little trend in any of the plots we assume convergence.
+Checking convergence of the mice algorithm can be done with the following plots of our imputed data. Since there is very little trend in any of the plots we assume convergence.
 
 ```r
 plot(imp, c("steps"), layout = c(2, 1))
 ```
 
-![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
+![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
 
 
 ```r
@@ -437,7 +449,7 @@ recombinedData = data.frame(steps = imputedData$steps, date = data$date, interva
 ```
 
 ## What is mean total number of steps taken per day?
-The imputed data changes both are mean and meadian. It actually increases this them.  This is probably due to our data not being dominated as much by zero values.  We can notice a difference in the histogram and the time series plot.
+The imputed data changes both the mean and meadian. It actually increases them. This is probably due to the data not being dominated by zero values as much with the addition of the imputed data. We can notice a difference in the histogram and the time series plot.
 
 #### Use ddply to calculate total steps per day.
 
@@ -454,7 +466,7 @@ ggplot(imputedTotalStepsPerDay, aes(x = date)) + geom_histogram(aes(fill = ..cou
     weight = Total), binwidth = 1)
 ```
 
-![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-19.png) 
+![plot of chunk unnamed-chunk-20](figure/unnamed-chunk-20.png) 
 
 
 #### Mean
@@ -501,7 +513,7 @@ ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line
     size = 1) + scale_colour_gradient(high = "#56B4E9", low = "#D55E00")
 ```
 
-![plot of chunk unnamed-chunk-24](figure/unnamed-chunk-24.png) 
+![plot of chunk unnamed-chunk-25](figure/unnamed-chunk-25.png) 
 
 #### Comparing Weekend and Weeday Patterns with Imputed Data
 
@@ -523,5 +535,5 @@ weekend = ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) +
 grid.arrange(weekday, weekend, ncol = 1)
 ```
 
-![plot of chunk unnamed-chunk-27](figure/unnamed-chunk-27.png) 
+![plot of chunk unnamed-chunk-28](figure/unnamed-chunk-28.png) 
 

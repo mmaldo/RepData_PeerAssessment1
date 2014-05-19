@@ -71,10 +71,18 @@ Here is a summary of the imputation.
 imp
 ```
 
-Data with with missing values is in blue. Red is imputed data. Plots of the other variables are just blue clusters since there is no missing data in any of them.
+Data with with missing values is in blue. Red is imputed data. 
+
+We can see how our imputed data clusters with our observed data with each iteration. So far it looks fairly decent.
+
 ```{r fig.width=20,fig.height=10}
 stripplot(imp, steps,pch = 20, cex = 1.2)
 ```
+The other plots of the other variables are strictly blue since we did not impute any data into them.  Here is a plot of them for comparison.
+```{r fig.width=20,fig.height=10}
+stripplot(imp, interval+date~.imp,pch = 20, cex = 1.2)
+```
+Next is a plot of the of steps vs interval with each iteration of the imputaion. We can see our imputed data evelve throughout the algorithm and observe that the distribution doesn't strat too far from the observed data.
 
 ```{r fig.width=20}
 xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
@@ -88,7 +96,7 @@ imputedData=complete(imp)
 recombinedData = data.frame(steps=imputedData$steps,date=data$date,interval=imputedData$interval)
 ```
 ## What is mean total number of steps taken per day?
-The imputed data changes both are mean and meadian. It actually increases this them.  This is probably due to our data not being dominated as much by zero values.  We can notice a difference in the histogram and the time series plot.
+The imputed data changes both the mean and meadian. It actually increases them. This is probably due to the data not being dominated by zero values as much with the addition of the imputed data. We can notice a difference in the histogram and the time series plot.
 
 #### Use ddply to calculate total steps per day.
 ```{r}
