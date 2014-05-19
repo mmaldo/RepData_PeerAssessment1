@@ -25,7 +25,7 @@ data <- read.csv("activity/activity.csv")
 data[, "date"] <- as.Date(data$date)
 ```
 
-### Count NA
+#### Count NA Values
 
 ```r
 sum(is.na(data))
@@ -79,7 +79,7 @@ median(totalStepsPerDay$Total)
 
 ## What is the average daily activity pattern?
 
-Average steps in an interval was first calculated with ddply.
+#### Average steps in an interval was first calculated with ddply.
 
 ```r
 averageStepsPerinterval <- ddply(data, .(interval), summarize, meanSteps = mean(steps, 
@@ -108,8 +108,10 @@ ggplot(averageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line(ae
 
 
 ## Imputing missing values
+
 Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. However, more diagnostics should probably be done. Extra iterations should also probably be done to decrese the noise. Convergence should also be checked. It was difficult finding a suitable technique for zero inflated count data. 50 imputaions were run with 5 iterations.
 
+#### Create New Factor Variable.
 
 ```r
 timeData = data.frame(data, time = as.numeric(factor(data$date)))
@@ -127,7 +129,7 @@ head(miceData)
 ## 6    NA    1       25
 ```
 
-
+#### Run the Imputation
 
 ```r
 imp <- imp <- mice(miceData, m = 50, seed = 23109)
@@ -388,6 +390,7 @@ imp <- imp <- mice(miceData, m = 50, seed = 23109)
 ##   5   50  steps
 ```
 
+
 Here is a summary of the imputation.
 
 ```r
@@ -415,6 +418,7 @@ imp
 ## interval     0    0        0
 ## Random generator seed value:  23109
 ```
+
 
 
 Data with with missing values is in blue. Red is imputed data. 
@@ -474,14 +478,15 @@ head(recombinedData)
 ## What is mean total number of steps taken per day?
 The imputed data changes both the mean and meadian. It actually increases them. This is probably due to the data not being dominated by zero values as much with the addition of the imputed data. We can notice a difference in the histogram and the time series plot.
 
-#### Use ddply to calculate total steps per day.
+### Create Histogram
+
+#### Calculate Total Steps per Day.
 
 ```r
 imputedTotalStepsPerDay <- ddply(recombinedData, .(date), summarize, Total = sum(steps))
 ```
 
 
-### Create Histogram
 #### Plot Histogram 
 
 ```r
@@ -514,6 +519,7 @@ median(imputedTotalStepsPerDay$Total)
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
+#### Add New Weekened/Weekday Factor
 A Weekend and Weekday factor was added to the new data frame.
 
 ```r
@@ -539,6 +545,8 @@ ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line
 ![plot of chunk unnamed-chunk-25](figure/unnamed-chunk-25.png) 
 
 #### Comparing Weekend and Weeday Patterns with Imputed Data
+
+Using the following plots we can see a slight difference in patterns between weekday and weekends.
 
 ```r
 weekday = ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) + 
