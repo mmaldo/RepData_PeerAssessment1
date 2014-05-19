@@ -20,7 +20,7 @@ sum(is.na(data))
 ## What is mean total number of steps taken per day?
 ### Create Histogram
 
-#### Total steps per day was calculated using ddply.
+#### Calculate Total Steps per Day
 ```{r}
 totalStepsPerDay<-ddply(data,.(date),summarize,Total=sum(steps,na.rm=TRUE))
 ```
@@ -66,7 +66,7 @@ miceData = data.frame(steps=timeData$steps,date=timeData$time,interval=timeData$
 head(miceData)
 ```
 #### Run the Imputation
-```{r cache=TRUE}
+```{r cache=TRUE,options}
 imp <- imp <- mice(miceData, m = 50, seed = 23109)
 ```
 
@@ -107,7 +107,7 @@ The imputed data changes both the mean and meadian. It actually increases them. 
 
 ### Create Histogram
 
-#### Calculate Total Steps per Day.
+#### Calculate Total Steps per Day
 ```{r}
 imputedTotalStepsPerDay<-ddply(recombinedData,.(date),summarize,Total=sum(steps))
 ```

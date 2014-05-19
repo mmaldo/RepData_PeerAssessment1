@@ -38,7 +38,7 @@ sum(is.na(data))
 ## What is mean total number of steps taken per day?
 ### Create Histogram
 
-#### Total steps per day was calculated using ddply.
+#### Calculate Total Steps per Day
 
 ```r
 totalStepsPerDay <- ddply(data, .(date), summarize, Total = sum(steps, na.rm = TRUE))
@@ -430,7 +430,7 @@ We can see how our imputed data clusters with our observed data with each iterat
 stripplot(imp, steps, pch = 20, cex = 1.2)
 ```
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14.png) 
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
 
 The other plots of the other variables are strictly blue since we did not impute any data into them.  Here is a plot of them for comparison.
 
@@ -438,7 +438,7 @@ The other plots of the other variables are strictly blue since we did not impute
 stripplot(imp, interval + date ~ .imp, pch = 20, cex = 1.2)
 ```
 
-![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14.png) 
 
 Next is a plot of the of steps vs interval with each iteration of the imputaion. We can see our imputed data evelve throughout the algorithm and observe that the distribution doesn't stray too far from the observed data.
 
@@ -447,7 +447,7 @@ Next is a plot of the of steps vs interval with each iteration of the imputaion.
 xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
 ```
 
-![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
+![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
 
 Checking convergence of the mice algorithm can be done with the following plots of our imputed data. Since there is very little trend in any of the plots we assume convergence.
 
@@ -455,7 +455,7 @@ Checking convergence of the mice algorithm can be done with the following plots 
 plot(imp, c("steps"), layout = c(2, 1))
 ```
 
-![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
+![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
 
 Here we just extract our imputed data frame and add back in our original date column.
 
@@ -480,7 +480,7 @@ The imputed data changes both the mean and meadian. It actually increases them. 
 
 ### Create Histogram
 
-#### Calculate Total Steps per Day.
+#### Calculate Total Steps per Day
 
 ```r
 imputedTotalStepsPerDay <- ddply(recombinedData, .(date), summarize, Total = sum(steps))
@@ -494,7 +494,7 @@ ggplot(imputedTotalStepsPerDay, aes(x = date)) + geom_histogram(aes(fill = ..cou
     weight = Total), binwidth = 1)
 ```
 
-![plot of chunk unnamed-chunk-20](figure/unnamed-chunk-20.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-19.png) 
 
 
 #### Mean
@@ -542,7 +542,7 @@ ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line
     size = 1) + scale_colour_gradient(high = "#56B4E9", low = "#D55E00")
 ```
 
-![plot of chunk unnamed-chunk-25](figure/unnamed-chunk-25.png) 
+![plot of chunk unnamed-chunk-24](figure/unnamed-chunk-24.png) 
 
 #### Comparing Weekend and Weeday Patterns with Imputed Data
 
@@ -566,5 +566,5 @@ weekend = ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) +
 grid.arrange(weekday, weekend, ncol = 1)
 ```
 
-![plot of chunk unnamed-chunk-28](figure/unnamed-chunk-28.png) 
+![plot of chunk unnamed-chunk-27](figure/unnamed-chunk-27.png) 
 
