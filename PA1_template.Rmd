@@ -33,7 +33,7 @@ bin = nclass.Sturges(totalStepsPerDay$date)
 bin=nrow(totalStepsPerDay)/class
 ```
 #### Plot Histogram 
-```{r}
+```{r fig.width=20}
 ggplot(totalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = 1)
 ```
 
@@ -106,7 +106,7 @@ bin = nclass.Sturges(imputedTotalStepsPerDay$date)
 bin=range(nrow(imputedTotalStepsPerDay)/class
 ```
 #### Plot Histogram 
-```{r}
+```{r fig.width=20}
 ggplot(imputedTotalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = 1)
 ```
 
