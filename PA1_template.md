@@ -546,7 +546,7 @@ ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line
 
 #### Comparing Weekend and Weeday Patterns with Imputed Data
 
-Using the following plots we can see a slight difference in patterns between weekday and weekends.
+Using the following plots we can see a slight difference in patterns between weekday and weekends. There is still a spike just before 10 AM on both plots. There does seem to be slightly more activity throughout the day on the weekend though.
 
 ```r
 weekday = ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) + 
