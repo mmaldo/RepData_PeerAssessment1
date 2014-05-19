@@ -56,11 +56,12 @@ ggplot(averageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colo
 ```
 
 ## Imputing missing values
-Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. However, more diagnostics should probably be done. Extra iterations should also probably be done to decrese the noise. Convergence should also be checked. It was difficult finding a suitable technique for zero inflated count data. 50 interations were run with 5 imputations.
+Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. However, more diagnostics should probably be done. Extra iterations should also probably be done to decrese the noise. Convergence should also be checked. It was difficult finding a suitable technique for zero inflated count data. 50 imputaions were run with 5 iterations.
 
 ```{r}
 timeData = data.frame(data,time=as.numeric(factor(data$date)))
 miceData = data.frame(steps=timeData$steps,date=timeData$time,interval=timeData$interval)
+head(miceData)
 ```
 
 ```{r cache=TRUE}
@@ -82,7 +83,7 @@ The other plots of the other variables are strictly blue since we did not impute
 ```{r fig.width=20,fig.height=10}
 stripplot(imp, interval+date~.imp,pch = 20, cex = 1.2)
 ```
-Next is a plot of the of steps vs interval with each iteration of the imputaion. We can see our imputed data evelve throughout the algorithm and observe that the distribution doesn't strat too far from the observed data.
+Next is a plot of the of steps vs interval with each iteration of the imputaion. We can see our imputed data evelve throughout the algorithm and observe that the distribution doesn't stray too far from the observed data.
 
 ```{r fig.width=20}
 xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
@@ -91,9 +92,11 @@ Checking convergence of the mice algorithm can be done with the following plots 
 ```{r fig.width=20,fig.height=8}
 plot(imp, c("steps"), layout=c(2,1))
 ```
+Here we just extract our imputed data frame and add back in our time column.
 ```{r}
 imputedData=complete(imp)
 recombinedData = data.frame(steps=imputedData$steps,date=data$date,interval=imputedData$interval)
+head(recombinedData)
 ```
 ## What is mean total number of steps taken per day?
 The imputed data changes both the mean and meadian. It actually increases them. This is probably due to the data not being dominated by zero values as much with the addition of the imputed data. We can notice a difference in the histogram and the time series plot.

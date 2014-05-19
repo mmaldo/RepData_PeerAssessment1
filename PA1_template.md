@@ -108,12 +108,23 @@ ggplot(averageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line(ae
 
 
 ## Imputing missing values
-Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. However, more diagnostics should probably be done. Extra iterations should also probably be done to decrese the noise. Convergence should also be checked. It was difficult finding a suitable technique for zero inflated count data. 50 interations were run with 5 imputations.
+Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. However, more diagnostics should probably be done. Extra iterations should also probably be done to decrese the noise. Convergence should also be checked. It was difficult finding a suitable technique for zero inflated count data. 50 imputaions were run with 5 iterations.
 
 
 ```r
 timeData = data.frame(data, time = as.numeric(factor(data$date)))
 miceData = data.frame(steps = timeData$steps, date = timeData$time, interval = timeData$interval)
+head(miceData)
+```
+
+```
+##   steps date interval
+## 1    NA    1        0
+## 2    NA    1        5
+## 3    NA    1       10
+## 4    NA    1       15
+## 5    NA    1       20
+## 6    NA    1       25
 ```
 
 
@@ -425,7 +436,7 @@ stripplot(imp, interval + date ~ .imp, pch = 20, cex = 1.2)
 
 ![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
 
-Next is a plot of the of steps vs interval with each iteration of the imputaion. We can see our imputed data evelve throughout the algorithm and observe that the distribution doesn't strat too far from the observed data.
+Next is a plot of the of steps vs interval with each iteration of the imputaion. We can see our imputed data evelve throughout the algorithm and observe that the distribution doesn't stray too far from the observed data.
 
 
 ```r
@@ -442,10 +453,22 @@ plot(imp, c("steps"), layout = c(2, 1))
 
 ![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
 
+Here we just extract our imputed data frame and add back in our time column.
 
 ```r
 imputedData = complete(imp)
 recombinedData = data.frame(steps = imputedData$steps, date = data$date, interval = imputedData$interval)
+head(recombinedData)
+```
+
+```
+##   steps       date interval
+## 1     0 2012-10-01        0
+## 2     0 2012-10-01        5
+## 3     0 2012-10-01       10
+## 4     0 2012-10-01       15
+## 5     0 2012-10-01       20
+## 6    47 2012-10-01       25
 ```
 
 ## What is mean total number of steps taken per day?
