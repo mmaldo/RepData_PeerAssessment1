@@ -13,50 +13,51 @@ library(gridExtra)
 data<-read.csv("activity/activity.csv")
 data[,"date"]<-as.Date(data$date)
 ```
-## Count NA
+### Count NA
 ```{r}
 sum(is.na(data))   
 ```
 ## What is mean total number of steps taken per day?
+### Create Histogram
+
+Total steps per day was calculated using ddply.
 ```{r}
 totalStepsPerDay<-ddply(data,.(date),summarize,Total=sum(steps,na.rm=TRUE))
-totalStepsPerDay
 ```
-
-## Create Histogram
-## Determine Number of Bins
+#### Determine Number of Bins
 ```{r}
 class = nclass.Sturges(totalStepsPerDay$Total)
 ```
-## Calculate bin width
+#### Calculate bin width
 ```{r}
 bin=range(totalStepsPerDay$Total)/class
 ```
-## Plot Histogram 
+#### Plot Histogram 
 ```{r}
 ggplot(totalStepsPerDay,aes(x=Total))+geom_histogram(aes(fill = ..count..),binwidth = bin[2])
 ```
 
-## What is mean total number of steps taken per day?
-## mean
+#### Mean
 ```{r}
 mean(totalStepsPerDay$Total)
 ```
-## median
+#### Median
 ```{r}
 median(totalStepsPerDay$Total)
 ```
 
 
 ## What is the average daily activity pattern?
+
+Average steps in an interval was first calculated with ddply.
 ```{r}
 averageStepsPerinterval<-ddply(data,.(interval),summarize,meanSteps=mean(steps,na.rm=TRUE))
 ```
-## max mean Steps interval
+#### Max mean Steps in an interval
 ```{r}
 averageStepsPerinterval[which.max(averageStepsPerinterval$meanSteps),]
 ```
-## Plot Mean Steps vs interval
+#### Plot Mean Steps vs Interval
 ```{r}
 ggplot(averageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1)+scale_colour_gradient(high="#56B4E9",low="#D55E00")
 ```
@@ -88,26 +89,25 @@ recombinedData = data.frame(steps=imputedData$steps,date=data$date,interval=impu
 imputedTotalStepsPerDay<-ddply(recombinedData,.(date),summarize,Total=sum(steps))
 ```
 
-## Create Histogram
-## Determine Number of Bins
+### Create Histogram
+#### Determine Number of Bins
 ```{r}
 class = nclass.Sturges(imputedTotalStepsPerDay$Total)
 ```
-## Calculate bin width
+#### Calculate bin width
 ```{r}
 bin=range(imputedTotalStepsPerDay$Total)/class
 ```
-## Plot Histogram 
+#### Plot Histogram 
 ```{r}
 ggplot(imputedTotalStepsPerDay,aes(x=Total))+geom_histogram(aes(fill = ..count..),binwidth = bin[2])
 ```
 
-## What is mean total number of steps taken per day?
-## Mean
+#### Mean
 ```{r}
 mean(imputedTotalStepsPerDay$Total)
 ```
-## Median
+#### Median
 ```{r}
 median(imputedTotalStepsPerDay$Total)
 ```
@@ -115,7 +115,8 @@ median(imputedTotalStepsPerDay$Total)
 ```{r}
 recombinedData<-transform(recombinedData ,week = ifelse(weekdays(data$date) %in% c('Sunday','Saturday') ,"Weekend","Weekday" ))
 ```
-Mean Steps in an interval with Imputed Data
+
+#### Mean Steps in an interval with Imputed Data
 ```{r}
 newaverageStepsPerinterval<-ddply(recombinedData,.(interval,week),summarize,meanSteps=mean(steps))
 ```
@@ -123,7 +124,7 @@ newaverageStepsPerinterval<-ddply(recombinedData,.(interval,week),summarize,mean
 ```{r}
 ggplot(newaverageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1)+scale_colour_gradient(high="#56B4E9",low="#D55E00")
 ```
-Comparing Weekend and Weeday Patterns with Imputed Data
+#### Comparing Weekend and Weeday Patterns with Imputed Data
 ```{r}
 weekday=ggplot(newaverageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1,subset=.(week == 'Weekday'))+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ ggtitle("Weekday")
 ```
