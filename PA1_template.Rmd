@@ -73,6 +73,11 @@ miceData = data.frame(steps=timeData$steps,date=timeData$time,interval=timeData$
 ```{r cache=TRUE}
 imp <- imp <- mice(miceData, m = 50, seed = 23109)
 ```
+Here is a summary of the imputation.
+```{r}
+imp
+```
+
 Data with with missing values is in blue. Red is imputed data.
 ```{r eval =FALSE,echo=FALSE}
 stripplot(imp, pch = 20, cex = 1.2)

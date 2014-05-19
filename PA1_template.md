@@ -382,6 +382,35 @@ imp <- imp <- mice(miceData, m = 50, seed = 23109)
 ##   5   50  steps
 ```
 
+Here is a summary of the imputation.
+
+```r
+imp
+```
+
+```
+## Multiply imputed data set
+## Call:
+## mice(data = miceData, m = 50, seed = 23109)
+## Number of multiple imputations:  50
+## Missing cells per column:
+##    steps     date interval 
+##     2304        0        0 
+## Imputation methods:
+##    steps     date interval 
+##    "pmm"       ""       "" 
+## VisitSequence:
+## steps 
+##     1 
+## PredictorMatrix:
+##          steps date interval
+## steps        0    1        1
+## date         0    0        0
+## interval     0    0        0
+## Random generator seed value:  23109
+```
+
+
 Data with with missing values is in blue. Red is imputed data.
 
 
@@ -391,7 +420,7 @@ Data with with missing values is in blue. Red is imputed data.
 xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
 ```
 
-![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
+![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
 
 
 
@@ -421,7 +450,7 @@ ggplot(imputedTotalStepsPerDay, aes(x = date)) + geom_histogram(aes(fill = ..cou
     weight = Total), binwidth = 1)
 ```
 
-![plot of chunk unnamed-chunk-21](figure/unnamed-chunk-21.png) 
+![plot of chunk unnamed-chunk-22](figure/unnamed-chunk-22.png) 
 
 
 #### Mean
@@ -468,7 +497,7 @@ ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) + geom_line
     size = 1) + scale_colour_gradient(high = "#56B4E9", low = "#D55E00")
 ```
 
-![plot of chunk unnamed-chunk-26](figure/unnamed-chunk-26.png) 
+![plot of chunk unnamed-chunk-27](figure/unnamed-chunk-27.png) 
 
 #### Comparing Weekend and Weeday Patterns with Imputed Data
 
@@ -490,5 +519,5 @@ weekend = ggplot(newaverageStepsPerinterval, aes(x = interval, y = meanSteps)) +
 grid.arrange(weekday, weekend, ncol = 1)
 ```
 
-![plot of chunk unnamed-chunk-29](figure/unnamed-chunk-29.png) 
+![plot of chunk unnamed-chunk-30](figure/unnamed-chunk-30.png) 
 
