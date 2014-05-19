@@ -89,7 +89,7 @@ averageStepsPerinterval <- ddply(data, .(interval), summarize, meanSteps = mean(
     na.rm = TRUE))
 ```
 
-#### Max mean Steps in an interval
+#### Max Mean Steps in an Interval
 
 ```r
 averageStepsPerinterval[which.max(averageStepsPerinterval$meanSteps), ]
@@ -190,7 +190,7 @@ imputedTotalStepsPerDay <- ddply(recombinedData, .(date), summarize, Total = sum
 class = nclass.Sturges(imputedTotalStepsPerDay$Total)
 ```
 
-#### Calculate bin width
+#### Calculate Bin Width
 
 ```r
 bin = range(imputedTotalStepsPerDay$Total)/class
@@ -234,7 +234,7 @@ recombinedData <- transform(recombinedData, week = ifelse(weekdays(data$date) %i
 ```
 
 
-#### Mean Steps in an interval with Imputed Data
+#### Mean Steps in an Interval with Imputed Data
 
 ```r
 newaverageStepsPerinterval <- ddply(recombinedData, .(interval, week), summarize, 

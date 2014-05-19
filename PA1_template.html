@@ -265,7 +265,7 @@ data[, &quot;date&quot;] &lt;- as.Date(data$date)
     na.rm = TRUE))
 </code></pre>
 
-<h4>Max mean Steps in an interval</h4>
+<h4>Max Mean Steps in an Interval</h4>
 
 <pre><code class="r">averageStepsPerinterval[which.max(averageStepsPerinterval$meanSteps), ]
 </code></pre>
@@ -348,7 +348,7 @@ recombinedData = data.frame(steps = imputedData$steps, date = data$date, interva
 <pre><code class="r">class = nclass.Sturges(imputedTotalStepsPerDay$Total)
 </code></pre>
 
-<h4>Calculate bin width</h4>
+<h4>Calculate Bin Width</h4>
 
 <pre><code class="r">bin = range(imputedTotalStepsPerDay$Total)/class
 </code></pre>
@@ -383,7 +383,7 @@ recombinedData = data.frame(steps = imputedData$steps, date = data$date, interva
     c(&quot;Sunday&quot;, &quot;Saturday&quot;), &quot;Weekend&quot;, &quot;Weekday&quot;))
 </code></pre>
 
-<h4>Mean Steps in an interval with Imputed Data</h4>
+<h4>Mean Steps in an Interval with Imputed Data</h4>
 
 <pre><code class="r">newaverageStepsPerinterval &lt;- ddply(recombinedData, .(interval, week), summarize, 
     meanSteps = mean(steps))
