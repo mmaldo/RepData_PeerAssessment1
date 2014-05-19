@@ -384,9 +384,6 @@ imp <- imp <- mice(miceData, m = 50, seed = 23109)
 
 Data with with missing values is in blue. Red is imputed data.
 
-```r
-stripplot(imp, pch = 20, cex = 1.2)
-```
 
 
 
@@ -448,6 +445,8 @@ median(imputedTotalStepsPerDay$Total)
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+A Weekend and Weekday factor was added to the new data frame.
 
 ```r
 recombinedData <- transform(recombinedData, week = ifelse(weekdays(data$date) %in% 

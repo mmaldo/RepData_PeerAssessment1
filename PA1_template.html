@@ -539,9 +539,6 @@ miceData = data.frame(steps = timeData$steps, date = timeData$time, interval = t
 
 <p>Data with with missing values is in blue. Red is imputed data.</p>
 
-<pre><code class="r">stripplot(imp, pch = 20, cex = 1.2)
-</code></pre>
-
 <pre><code class="r">xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
 </code></pre>
 
@@ -587,6 +584,8 @@ recombinedData = data.frame(steps = imputedData$steps, date = data$date, interva
 </code></pre>
 
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
+
+<p>A Weekend and Weekday factor was added to the new data frame.</p>
 
 <pre><code class="r">recombinedData &lt;- transform(recombinedData, week = ifelse(weekdays(data$date) %in% 
     c(&quot;Sunday&quot;, &quot;Saturday&quot;), &quot;Weekend&quot;, &quot;Weekday&quot;))
