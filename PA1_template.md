@@ -1,5 +1,7 @@
 # Reproducible Research: Peer Assessment 1
 
+#### Libraries to load.
+
 ```r
 library(lattice)
 library(ggplot2)
@@ -35,6 +37,8 @@ library(stringr)
 
 ## Loading and preprocessing the data
 
+Data is first loaded into R and the date column is converted to a date object. A time variable is also created that holds the POSIXct object created with lubridate. This is used later in the time series plot.
+
 ```r
 data <- read.csv("activity/activity.csv")
 data[, "date"] <- as.Date(data$date)
@@ -45,6 +49,7 @@ time <- ymd_hms(time)
 ```
 
 #### Count NA Values
+This a count of all the missing data in the activity data. We will see later that all the data is missing from the "steps" column in the data frame.
 
 ```r
 sum(is.na(data))
@@ -55,7 +60,7 @@ sum(is.na(data))
 ```
 
 ## What is mean total number of steps taken per day?
-### Create Histogram
+Here we just visualize the total steps per a day. We also calculate the mean and median of the total steps per a day.
 
 #### Calculate Total Steps per Day
 
@@ -98,6 +103,8 @@ median(totalStepsPerDay$Total)
 
 ## What is the average daily activity pattern?
 
+To get a better view of the daily activity pattern we will take a look at the max average steps from all the intervals and we will take a look at a time series plot of the average steps that occured throughout the recorded days.
+
 #### Average steps in an interval was first calculated with ddply.
 
 ```r
@@ -106,6 +113,7 @@ averageStepsPerinterval <- ddply(data, .(interval), summarize, meanSteps = mean(
 ```
 
 #### Max Mean Steps in an Interval
+The most steps averaged from all of the days appears at interval 835 with a mean of 206.2.
 
 ```r
 max <- averageStepsPerinterval[which.max(averageStepsPerinterval$meanSteps), 
@@ -139,7 +147,7 @@ ggplot(averageStepsPerinterval, aes(x = time, y = meanSteps)) + geom_line(aes(co
 
 Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. Using this technique is also assuming the data follows a missing at random(MAR) model. More diagnostics should also probably be done. Extra iterations should also probably be done to decrese the noise. Convergence should also be checked. It was difficult finding a suitable technique for zero inflated count data. 50 imputaions were run with 5 iterations.
 
-#### Create New Factor Variable.
+#### Create New Factor Variable
 
 ```r
 timeData = data.frame(data, time = as.numeric(factor(data$date)))
@@ -449,7 +457,7 @@ imp
 
 
 
-Data with with missing values is in blue. Red is imputed data. 
+Data with with missing values is in blue. Red is the imputed data. 
 
 We can see how our imputed data clusters with our observed data with each iteration. So far it looks fairly decent.
 
@@ -458,7 +466,7 @@ We can see how our imputed data clusters with our observed data with each iterat
 stripplot(imp, steps, pch = 20, cex = 1.2)
 ```
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14.png) 
+![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
 
 The other plots of the other variables are strictly blue since we did not impute any data into them.  Here is a plot of them for comparison.
 
@@ -466,7 +474,7 @@ The other plots of the other variables are strictly blue since we did not impute
 stripplot(imp, interval + date ~ .imp, pch = 20, cex = 1.2)
 ```
 
-![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
+![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
 
 Next is a plot of the of steps vs interval of the imputaions. We can see our imputed data evelve throughout the algorithm and observe that the distribution doesn't stray too far from the observed data.
 
@@ -475,7 +483,7 @@ Next is a plot of the of steps vs interval of the imputaions. We can see our imp
 xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
 ```
 
-![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
+![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
 
 Checking convergence of the mice algorithm can be done with the following plots of our imputed data. Since there is very little trend in any of the plots we assume convergence.
 
@@ -483,7 +491,7 @@ Checking convergence of the mice algorithm can be done with the following plots 
 plot(imp, c("steps"), layout = c(2, 1))
 ```
 
-![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
+![plot of chunk unnamed-chunk-18](figure/unnamed-chunk-18.png) 
 
 Here we just extract our imputed data frame and add back in our original date column.
 
@@ -506,8 +514,6 @@ head(recombinedData)
 ## What is mean total number of steps taken per day?
 The imputed data changes both the mean and meadian. It actually increases them. This is probably due to the data not being dominated by zero values as much with the addition of the imputed data. We can notice a difference in the histogram and the time series plot.
 
-### Create Histogram
-
 #### Calculate Total Steps per Day
 
 ```r
@@ -522,7 +528,7 @@ ggplot(imputedTotalStepsPerDay, aes(x = date)) + geom_histogram(aes(fill = ..cou
     weight = Total), binwidth = 1)
 ```
 
-![plot of chunk unnamed-chunk-20](figure/unnamed-chunk-20.png) 
+![plot of chunk unnamed-chunk-21](figure/unnamed-chunk-21.png) 
 
 
 #### Mean
@@ -546,9 +552,10 @@ median(imputedTotalStepsPerDay$Total)
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+We will now take a look at the activity patters throughout the day with the imputed data. The first plot is a plot of the the weekend and weekday patterns combined.  The final plot seperates the weekend and weekday patterns.
 
 #### Add New Weekened/Weekday Factor
-A Weekend and Weekday factor was added to the new data frame.
+
 
 ```r
 recombinedData <- transform(recombinedData, week = ifelse(weekdays(data$date) %in% 
@@ -558,21 +565,23 @@ recombinedData <- transform(recombinedData, week = ifelse(weekdays(data$date) %i
 
 #### Mean Steps in an Interval with Imputed Data
 
+The intervel time that was converted up above was also added to the recombined data to make a proper time series plot.
+
 ```r
 recombinedData <- cbind(recombinedData, time)
 newaverageStepsPerinterval <- ddply(recombinedData, .(interval, week, time), 
     summarize, meanSteps = mean(steps))
 ```
 
-
+#### Create Plot
 
 ```r
 ggplot(newaverageStepsPerinterval, aes(x = time, y = meanSteps)) + geom_line(aes(colour = meanSteps), 
     size = 1) + scale_colour_gradient(high = "#56B4E9", low = "#D55E00") + scale_x_datetime(labels = date_format("%H%M"), 
-    breaks = date_breaks("5 hour")) + xlab("interval")
+    breaks = date_breaks("5 hour")) + xlab("Interval") + ylab("Number of Steps")
 ```
 
-![plot of chunk unnamed-chunk-25](figure/unnamed-chunk-25.png) 
+![plot of chunk unnamed-chunk-26](figure/unnamed-chunk-26.png) 
 
 #### Comparing Weekend and Weeday Patterns with Imputed Data
 
@@ -600,5 +609,5 @@ weekend = ggplot(newaverageStepsPerinterval, aes(x = time, y = meanSteps)) +
 grid.arrange(weekday, weekend, ncol = 1)
 ```
 
-![plot of chunk unnamed-chunk-28](figure/unnamed-chunk-28.png) 
+![plot of chunk unnamed-chunk-29](figure/unnamed-chunk-29.png) 
 
