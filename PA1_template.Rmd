@@ -65,7 +65,7 @@ max
 averageStepsPerinterval<-cbind(averageStepsPerinterval,time)
 ```
 ```{r fig.width=20}
-ggplot(averageStepsPerinterval, aes(x=time, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1)+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ scale_x_datetime(labels = date_format("%H%M"),breaks = date_breaks("5 hour"))+xlab("interval")
+ggplot(averageStepsPerinterval, aes(x=time, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1)+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ scale_x_datetime(labels = date_format("%H%M"),breaks = date_breaks("5 hour"))+xlab("Interval")+ylab("Number of Steps")
 ```
 
 ## Imputing missing values
@@ -79,8 +79,8 @@ miceData = data.frame(steps=timeData$steps,date=timeData$time,interval=timeData$
 head(miceData)
 ```
 #### Run the Imputation
-```{r cache=TRUE,options}
-imp <- imp <- mice(miceData, m = 50, seed = 23109)
+```{r cache=TRUE}
+imp <- mice(miceData, m = 50, seed = 23109)
 ```
 
 Here is a summary of the imputation.
@@ -160,10 +160,10 @@ ggplot(newaverageStepsPerinterval, aes(x=time, y=meanSteps))+geom_line(aes(colou
 
 Using the following plots we can see a slight difference in patterns between weekday and weekends. There is still a spike just before 10 AM on both plots. There does seem to be slightly more activity throughout the day on the weekend though.
 ```{r}
-weekday=ggplot(newaverageStepsPerinterval, aes(x=time, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1,subset=.(week == 'Weekday'))+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ ggtitle("Weekday")+ scale_x_datetime(labels = date_format("%H%M"),breaks = date_breaks("5 hour"))+xlab("interval")
+weekday=ggplot(newaverageStepsPerinterval, aes(x=time, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1,subset=.(week == 'Weekday'))+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ ggtitle("Weekday")+ scale_x_datetime(labels = date_format("%H%M"),breaks = date_breaks("5 hour"))+xlab("Interval")+ylab("Number of Steps")
 ```
 ```{r}
-weekend=ggplot(newaverageStepsPerinterval, aes(x=time, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1,subset=.(week == 'Weekend'))+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ ggtitle("Weekend")+ scale_x_datetime(labels = date_format("%H%M"),breaks = date_breaks("5 hour"))+xlab("interval")
+weekend=ggplot(newaverageStepsPerinterval, aes(x=time, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1,subset=.(week == 'Weekend'))+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ ggtitle("Weekend")+ scale_x_datetime(labels = date_format("%H%M"),breaks = date_breaks("5 hour"))+xlab("Interval")+ylab("Number of Steps")
 ```
 ```{r fig.width=20,fig.height=10}
 grid.arrange(weekday,weekend, ncol=1)

@@ -129,7 +129,7 @@ averageStepsPerinterval <- cbind(averageStepsPerinterval, time)
 ```r
 ggplot(averageStepsPerinterval, aes(x = time, y = meanSteps)) + geom_line(aes(colour = meanSteps), 
     size = 1) + scale_colour_gradient(high = "#56B4E9", low = "#D55E00") + scale_x_datetime(labels = date_format("%H%M"), 
-    breaks = date_breaks("5 hour")) + xlab("interval")
+    breaks = date_breaks("5 hour")) + xlab("Interval") + ylab("Number of Steps")
 ```
 
 ![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
@@ -160,7 +160,7 @@ head(miceData)
 #### Run the Imputation
 
 ```r
-imp <- imp <- mice(miceData, m = 50, seed = 23109)
+imp <- mice(miceData, m = 50, seed = 23109)
 ```
 
 ```
@@ -583,7 +583,7 @@ weekday = ggplot(newaverageStepsPerinterval, aes(x = time, y = meanSteps)) +
     geom_line(aes(colour = meanSteps), size = 1, subset = .(week == "Weekday")) + 
     scale_colour_gradient(high = "#56B4E9", low = "#D55E00") + ggtitle("Weekday") + 
     scale_x_datetime(labels = date_format("%H%M"), breaks = date_breaks("5 hour")) + 
-    xlab("interval")
+    xlab("Interval") + ylab("Number of Steps")
 ```
 
 
@@ -592,7 +592,7 @@ weekend = ggplot(newaverageStepsPerinterval, aes(x = time, y = meanSteps)) +
     geom_line(aes(colour = meanSteps), size = 1, subset = .(week == "Weekend")) + 
     scale_colour_gradient(high = "#56B4E9", low = "#D55E00") + ggtitle("Weekend") + 
     scale_x_datetime(labels = date_format("%H%M"), breaks = date_breaks("5 hour")) + 
-    xlab("interval")
+    xlab("Interval") + ylab("Number of Steps")
 ```
 
 

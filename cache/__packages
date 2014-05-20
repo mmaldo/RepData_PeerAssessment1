@@ -3,6 +3,9 @@ ggplot2
 gridExtra
 knitr
 lattice
+lubridate
 mice
 plyr
 Rcpp
+scales
+stringr
