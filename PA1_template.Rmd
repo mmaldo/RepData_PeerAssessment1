@@ -1,6 +1,6 @@
 # Reproducible Research: Peer Assessment 1
 
-#### Libraries to load.
+#### Libraries to load
 ```{r}
 library(lattice)
 library(ggplot2)
@@ -40,7 +40,7 @@ totalStepsPerDay<-ddply(data,.(date),summarize,Total=sum(steps,na.rm=TRUE))
 
 #### Plot Histogram 
 ```{r fig.width=20}
-ggplot(totalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = 1)
+ggplot(totalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = 1)+xlab("Date")+ylab("Count")
 ```
 
 #### Mean
@@ -133,7 +133,7 @@ imputedTotalStepsPerDay<-ddply(recombinedData,.(date),summarize,Total=sum(steps)
 
 #### Plot Histogram 
 ```{r fig.width=20}
-ggplot(imputedTotalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = 1)
+ggplot(imputedTotalStepsPerDay,aes(x=date))+geom_histogram(aes(fill = ..count..,weight=Total),binwidth = 1)+xlab("Date")+ylab("Count")
 ```
 
 #### Mean

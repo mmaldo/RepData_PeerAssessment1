@@ -1,6 +1,6 @@
 # Reproducible Research: Peer Assessment 1
 
-#### Libraries to load.
+#### Libraries to load
 
 ```r
 library(lattice)
@@ -73,7 +73,7 @@ totalStepsPerDay <- ddply(data, .(date), summarize, Total = sum(steps, na.rm = T
 
 ```r
 ggplot(totalStepsPerDay, aes(x = date)) + geom_histogram(aes(fill = ..count.., 
-    weight = Total), binwidth = 1)
+    weight = Total), binwidth = 1) + xlab("Date") + ylab("Count")
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
@@ -525,7 +525,7 @@ imputedTotalStepsPerDay <- ddply(recombinedData, .(date), summarize, Total = sum
 
 ```r
 ggplot(imputedTotalStepsPerDay, aes(x = date)) + geom_histogram(aes(fill = ..count.., 
-    weight = Total), binwidth = 1)
+    weight = Total), binwidth = 1) + xlab("Date") + ylab("Count")
 ```
 
 ![plot of chunk unnamed-chunk-21](figure/unnamed-chunk-21.png) 
