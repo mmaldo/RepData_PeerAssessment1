@@ -118,7 +118,7 @@ max
 ## 104      835     206.2
 ```
 
-print(paste(hour(max[1,1]),":",minute(max[1,1])," ",max[2],sep=""))
+
 #### Plot Mean Steps vs Interval
 
 ```r
