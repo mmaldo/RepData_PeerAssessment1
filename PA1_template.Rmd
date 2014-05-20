@@ -7,11 +7,19 @@ library(plyr)
 library(knitr)
 library(grid)
 library(gridExtra)
+library(scales)
+library(lubridate)
+library(stringr)
 ```
 ## Loading and preprocessing the data
 ```{r}
 data<-read.csv("activity/activity.csv")
 data[,"date"]<-as.Date(data$date)
+
+time<-str_pad(data$interval, 4, side = "left", pad = "0")
+time <- strptime(time, "%H%M")
+time<-ymd_hms(time)
+
 ```
 #### Count NA Values
 ```{r}
@@ -48,16 +56,21 @@ averageStepsPerinterval<-ddply(data,.(interval),summarize,meanSteps=mean(steps,n
 ```
 #### Max Mean Steps in an Interval
 ```{r}
-averageStepsPerinterval[which.max(averageStepsPerinterval$meanSteps),]
+max<-averageStepsPerinterval[which.max(averageStepsPerinterval$meanSteps),]
+max
 ```
+print(paste(hour(max[1,1]),":",minute(max[1,1])," ",max[2],sep=""))
 #### Plot Mean Steps vs Interval
+```{r}
+averageStepsPerinterval<-cbind(averageStepsPerinterval,time)
+```
 ```{r fig.width=20}
-ggplot(averageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1)+scale_colour_gradient(high="#56B4E9",low="#D55E00")
+ggplot(averageStepsPerinterval, aes(x=time, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1)+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ scale_x_datetime(labels = date_format("%H%M"),breaks = date_breaks("5 hour"))+xlab("interval")
 ```
 
 ## Imputing missing values
 
-Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. However, more diagnostics should probably be done. Extra iterations should also probably be done to decrese the noise. Convergence should also be checked. It was difficult finding a suitable technique for zero inflated count data. 50 imputaions were run with 5 iterations.
+Data was imputed with multiple imputation using the mice package. The method used was predictive mean matching. An extra column was added where the date column is converted to a factor and then a numeric. I did this to make imputing with mice package work. Results seem reasonable. Using this technique is also assuming the data follows a missing at random(MAR) model. More diagnostics should also probably be done. Extra iterations should also probably be done to decrese the noise. Convergence should also be checked. It was difficult finding a suitable technique for zero inflated count data. 50 imputaions were run with 5 iterations.
 
 #### Create New Factor Variable.
 ```{r}
@@ -87,7 +100,7 @@ The other plots of the other variables are strictly blue since we did not impute
 ```{r fig.width=20,fig.height=10}
 stripplot(imp, interval+date~.imp,pch = 20, cex = 1.2)
 ```
-Next is a plot of the of steps vs interval with each iteration of the imputaion. We can see our imputed data evelve throughout the algorithm and observe that the distribution doesn't stray too far from the observed data.
+Next is a plot of the of steps vs interval of the imputaions. We can see our imputed data evelve throughout the algorithm and observe that the distribution doesn't stray too far from the observed data.
 
 ```{r fig.width=20}
 xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
@@ -135,20 +148,22 @@ recombinedData<-transform(recombinedData ,week = ifelse(weekdays(data$date) %in%
 
 #### Mean Steps in an Interval with Imputed Data
 ```{r}
-newaverageStepsPerinterval<-ddply(recombinedData,.(interval,week),summarize,meanSteps=mean(steps))
+recombinedData<-cbind(recombinedData,time)
+newaverageStepsPerinterval<-ddply(recombinedData,.(interval,week,time),summarize,meanSteps=mean(steps))
+
 ```
 
 ```{r fig.width=20}
-ggplot(newaverageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1)+scale_colour_gradient(high="#56B4E9",low="#D55E00")
+ggplot(newaverageStepsPerinterval, aes(x=time, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1)+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ scale_x_datetime(labels = date_format("%H%M"),breaks = date_breaks("5 hour"))+xlab("interval")
 ```
 #### Comparing Weekend and Weeday Patterns with Imputed Data
 
 Using the following plots we can see a slight difference in patterns between weekday and weekends. There is still a spike just before 10 AM on both plots. There does seem to be slightly more activity throughout the day on the weekend though.
 ```{r}
-weekday=ggplot(newaverageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1,subset=.(week == 'Weekday'))+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ ggtitle("Weekday")
+weekday=ggplot(newaverageStepsPerinterval, aes(x=time, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1,subset=.(week == 'Weekday'))+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ ggtitle("Weekday")+ scale_x_datetime(labels = date_format("%H%M"),breaks = date_breaks("5 hour"))+xlab("interval")
 ```
 ```{r}
-weekend=ggplot(newaverageStepsPerinterval, aes(x=interval, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1,subset=.(week == 'Weekend'))+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ ggtitle("Weekend")
+weekend=ggplot(newaverageStepsPerinterval, aes(x=time, y=meanSteps))+geom_line(aes(colour = meanSteps),size=1,subset=.(week == 'Weekend'))+scale_colour_gradient(high="#56B4E9",low="#D55E00")+ ggtitle("Weekend")+ scale_x_datetime(labels = date_format("%H%M"),breaks = date_breaks("5 hour"))+xlab("interval")
 ```
 ```{r fig.width=20,fig.height=10}
 grid.arrange(weekday,weekend, ncol=1)
