@@ -6,7 +6,6 @@ library(lattice)
 library(ggplot2)
 library(mice)
 library(plyr)
-library(knitr)
 library(grid)
 library(gridExtra)
 library(scales)
@@ -102,7 +101,7 @@ Data with with missing values is in blue. Red is the imputed data.
 We can see how our imputed data clusters with our observed data with each iteration. So far it looks fairly decent.
 
 ```{r fig.width=20,fig.height=10}
-stripplot(imp, steps,pch = 20, cex = 1.2)
+stripplot(imp, steps,pch = 20, ylab="Steps",cex = 1.2)
 ```
 The other plots of the other variables are strictly blue since we did not impute any data into them.  Here is a plot of them for comparison.
 ```{r fig.width=20,fig.height=10}
@@ -111,11 +110,11 @@ stripplot(imp, interval+date~.imp,pch = 20, cex = 1.2)
 Next is a plot of the of steps vs interval of the imputaions. We can see our imputed data evelve throughout the algorithm and observe that the distribution doesn't stray too far from the observed data.
 
 ```{r fig.width=20}
-xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
+xyplot(imp, steps ~ interval | .imp, xlab="Interval",ylab="Steps",pch = 20, cex = 1.4)
 ```
 Checking convergence of the mice algorithm can be done with the following plots of our imputed data. Since there is very little trend in any of the plots we assume convergence.
 ```{r fig.width=20,fig.height=8}
-plot(imp, c("steps"), layout=c(2,1))
+plot(imp, c("steps"), layout=c(2,1),cex=c(1,1.5))
 ```
 Here we just extract our imputed data frame and add back in our original date column.
 ```{r}

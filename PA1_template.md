@@ -463,7 +463,7 @@ We can see how our imputed data clusters with our observed data with each iterat
 
 
 ```r
-stripplot(imp, steps, pch = 20, cex = 1.2)
+stripplot(imp, steps, pch = 20, ylab = "Steps", cex = 1.2)
 ```
 
 ![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
@@ -480,7 +480,8 @@ Next is a plot of the of steps vs interval of the imputaions. We can see our imp
 
 
 ```r
-xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
+xyplot(imp, steps ~ interval | .imp, xlab = "Interval", ylab = "Steps", pch = 20, 
+    cex = 1.4)
 ```
 
 ![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
@@ -488,7 +489,7 @@ xyplot(imp, steps ~ interval | .imp, pch = 20, cex = 1.4)
 Checking convergence of the mice algorithm can be done with the following plots of our imputed data. Since there is very little trend in any of the plots we assume convergence.
 
 ```r
-plot(imp, c("steps"), layout = c(2, 1))
+plot(imp, c("steps"), layout = c(2, 1), cex = c(1, 1.5))
 ```
 
 ![plot of chunk unnamed-chunk-18](figure/unnamed-chunk-18.png) 
